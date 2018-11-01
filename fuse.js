@@ -3,10 +3,7 @@ const {
   WebIndexPlugin,
   QuantumPlugin,
   EnvPlugin,
-  CopyPlugin,
-  CSSPlugin,
-  SassPlugin,
-  CSSResourcePlugin
+  CopyPlugin
 } = require("fuse-box");
 
 const production = process.env.NODE_ENV === "dev" ? false : true;
@@ -30,14 +27,13 @@ const config = {
           es6: true
         }
       }),
-    [SassPlugin(), CSSPlugin()],
     WebIndexPlugin({
       template: `src/resources/page/app.html`,
       path: production ? "." : "/",
       target: `app.html`
     }),
     CopyPlugin({
-      files: ["*.woff2", "*.png", "*.svg"],
+      files: ["*.woff2", "*.woff", "*.png", "*.svg"],
       dest: "assets",
       resolve: production ? "./assets" : "/assets"
     })
@@ -50,7 +46,7 @@ if (!production) {
   fuse.dev({ httpServer: true });
 }
 
-const app = fuse.bundle("app").instructions("> index.ts");
+const app = fuse.bundle("app").instructions("> index.tsx");
 
 if (!production) {
   app.hmr().watch();
