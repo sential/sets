@@ -108,7 +108,7 @@ export class Range {
         this.getOriginStart(),
         range.getOriginStart(),
         this.leftOpen,
-        range.rightOpen
+        !range.leftOpen
       );
 
       const result2 = new Range(
