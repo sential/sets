@@ -1,0 +1,29 @@
+{
+  "name": "sets",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev node fuse.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sential/sets.git"
+  },
+  "author": "Eryk Rakowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sential/sets/issues"
+  },
+  "homepage": "https://github.com/sential/sets#readme",
+  "devDependencies": {
+    "cross-env": "5.2.0",
+    "fuse-box": "3.6.0",
+    "node-sass": "4.9.4",
+    "tslint": "5.11.0",
+    "tslint-config-airbnb": "5.11.0",
+    "tslint-config-prettier": "1.15.0",
+    "typescript": "3.1.5",
+    "uglify-es": "3.3.9",
+    "uglify-js": "3.4.9"
+  }
+}
