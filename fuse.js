@@ -50,7 +50,7 @@ if (!production) {
   fuse.dev({ httpServer: true });
 }
 
-const app = fuse.bundle("app").instructions("> [index.ts]");
+const app = fuse.bundle("app").instructions("> index.ts");
 
 if (!production) {
   app.hmr().watch();
