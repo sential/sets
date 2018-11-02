@@ -1,7 +1,6 @@
 import { css } from "styled-components";
 
 import robotoRegular from "./resources/fonts/roboto-regular.woff2";
-import computerModern from "./resources/fonts/cmunsi.woff";
 
 export const Style = css`
   @font-face {
@@ -9,13 +8,6 @@ export const Style = css`
     font-style: normal;
     font-weight: 400;
     src: url(${robotoRegular}) format("woff2");
-  }
-
-  @font-face {
-    font-family: "Computer Modern";
-    font-style: normal;
-    font-weight: 400;
-    src: url(${computerModern}) format("woff");
   }
 
   body {

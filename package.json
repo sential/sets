@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev node fuse.js"
+    "dev": "cross-env NODE_ENV=dev node fuse.js",
+    "build": "node fuse.js"
   },
   "repository": {
     "type": "git",
