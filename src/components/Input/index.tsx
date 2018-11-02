@@ -6,6 +6,7 @@ const MathJax = require("react-mathjax").default;
 
 interface Props {
   formula: string;
+  state: "none" | "valid" | "error";
 }
 
 export default class Input extends React.Component<Props> {
@@ -36,37 +37,52 @@ export default class Input extends React.Component<Props> {
     this.appendToInput("∪");
   };
 
+  public onEmptyButtonClick = () => {
+    this.appendToInput("Ø");
+  };
+
   public getValue = () => {
     const { inputElement } = this.inputRef.current;
     return inputElement.value;
   };
 
   public render() {
-    const { formula } = this.props;
+    const { formula, state } = this.props;
 
     return (
       <MathInput>
-        <MathJax.Node formula={`${formula} = `} inline />
+        <MathJax.Node style={{ width: 72 }} formula={`${formula} = `} inline />
         <TextField
           ref={this.inputRef}
-          style={{ marginTop: -7, left: 66, position: "absolute", width: 128 }}
+          color={
+            state === "none"
+              ? "#2196F3"
+              : state === "valid"
+                ? "#4CAF50"
+                : "#F44336"
+          }
+          style={{ marginTop: -7, flex: 1 }}
         />
-        <CharButton
-          onClick={this.onInfButtonClick}
-          style={{ marginTop: -7, left: 66 + 128 + 8, position: "absolute" }}
-        >
+        <CharButton onClick={this.onInfButtonClick} style={{ marginTop: -7 }}>
           &#8734;
         </CharButton>
         <CharButton
           onClick={this.onSumButtonClick}
           style={{
             marginTop: -7,
-            left: 66 + 128 + 8 + 38,
-            position: "absolute",
-            fontSize: 14
+            fontSize: 16
           }}
         >
           ∪
+        </CharButton>
+        <CharButton
+          onClick={this.onEmptyButtonClick}
+          style={{
+            marginTop: -7,
+            fontSize: 14
+          }}
+        >
+          Ø
         </CharButton>
       </MathInput>
     );

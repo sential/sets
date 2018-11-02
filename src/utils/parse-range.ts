@@ -1,6 +1,7 @@
 import { Range } from "../models/range";
 
 export const parseRange = (str: string) => {
+  if (str.trim() === "Ø") return "Ø";
   const params = str
     .substring(1, str.length - 1)
     .split(",")
