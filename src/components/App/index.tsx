@@ -11,9 +11,6 @@ const MathJax = require("react-mathjax").default;
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
-const tex1 = `A = \\langle 0, 10 \\rangle`;
-const tex2 = `B = (5, 8 \\rangle`;
-
 interface State {
   setA: string;
   setB: string;
@@ -57,11 +54,31 @@ const generateSet = () => {
   return { text: range.toString(), range };
 };
 
+const getResultString = (ranges: Range[]) => {
+  return ranges
+    .map(res =>
+      res
+        .toString()
+        .replace("\\rangle", ">")
+        .replace("\\langle", "<")
+        .replace("\\infty", "∞")
+        .replace("∪", "u")
+    )
+    .join("u")
+    .replace(/ /g, "");
+};
+
+const getInputString = (str: string) => {
+  return getResultString(
+    str.split("∪").map((item: string) => parseRange(item))
+  );
+};
+
 export default class App extends React.Component<{}, State> {
-  private sumInputRef = React.createRef<Input>();
-  private commonInputRef = React.createRef<Input>();
-  private aWithoutInputRef = React.createRef<Input>();
-  private bWithoutInputRef = React.createRef<Input>();
+  private inputRef1 = React.createRef<Input>();
+  private inputRef2 = React.createRef<Input>();
+  private inputRef3 = React.createRef<Input>();
+  private inputRef4 = React.createRef<Input>();
 
   private rangeA: Range;
   private rangeB: Range;
@@ -85,52 +102,17 @@ export default class App extends React.Component<{}, State> {
   }
 
   public onCheckClick = () => {
-    const test1 = this.rangeA.sum(this.rangeB);
-    const test2 = this.rangeA.commonPart(this.rangeB);
-    const test3 = this.rangeA.without(this.rangeB);
-    const test4 = this.rangeB.without(this.rangeA);
+    const test1 = getResultString(this.rangeA.sum(this.rangeB));
+    const test2 = getResultString(this.rangeA.commonPart(this.rangeB));
+    const test3 = getResultString(this.rangeA.without(this.rangeB));
+    const test4 = getResultString(this.rangeB.without(this.rangeA));
 
-    const range2 = [parseRange(this.commonInputRef.current.getValue())];
-    console.log(
-      test1
-        .map(res =>
-          res
-            .toString()
-            .replace("\\rangle", ">")
-            .replace("\\langle", "<")
-            .replace("\\infty", "∞")
-        )
-        .join(" u ")
-    );
-    console.log(
-      test2
-        .toString()
-        .replace("\\rangle", ">")
-        .replace("\\langle", "<")
-        .replace("\\infty", "∞")
-    );
-    console.log(
-      test3
-        .map(res =>
-          res
-            .toString()
-            .replace("\\rangle", ">")
-            .replace("\\langle", "<")
-            .replace("\\infty", "∞")
-        )
-        .join(" u ")
-    );
-    console.log(
-      test4
-        .map(res =>
-          res
-            .toString()
-            .replace("\\rangle", ">")
-            .replace("\\langle", "<")
-            .replace("\\infty", "∞")
-        )
-        .join(" u ")
-    );
+    const range1 = getInputString(this.inputRef1.current.getValue());
+    const range2 = getInputString(this.inputRef2.current.getValue());
+    const range3 = getInputString(this.inputRef3.current.getValue());
+    const range4 = getInputString(this.inputRef4.current.getValue());
+
+    console.log(test1 === range1);
   };
 
   public render() {
@@ -143,10 +125,10 @@ export default class App extends React.Component<{}, State> {
             <MathJax.Node formula={`A = ${this.state.setA}`} inline />
             &nbsp;&nbsp;&nbsp;
             <MathJax.Node formula={`B = ${this.state.setB}`} inline />
-            <Input ref={this.sumInputRef} formula={`A \\cup B`} />
-            <Input ref={this.commonInputRef} formula={`A \\cap B`} />
-            <Input ref={this.aWithoutInputRef} formula={`A \\setminus B`} />
-            <Input ref={this.bWithoutInputRef} formula={`B \\setminus A`} />
+            <Input ref={this.inputRef1} formula={`A \\cup B`} />
+            <Input ref={this.inputRef2} formula={`A \\cap B`} />
+            <Input ref={this.inputRef3} formula={`A \\setminus B`} />
+            <Input ref={this.inputRef4} formula={`B \\setminus A`} />
             <button onClick={this.onCheckClick}>Check</button>
           </Dialog>
         </StyledApp>

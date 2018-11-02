@@ -4,7 +4,11 @@ export const parseRange = (str: string) => {
   const params = str
     .substring(1, str.length - 1)
     .split(",")
-    .map(param => parseInt(param, 10));
+    .map(param => {
+      if (param === "-∞") return Number.NEGATIVE_INFINITY;
+      if (param === "∞") return Number.POSITIVE_INFINITY;
+      return parseInt(param, 10);
+    });
 
   const range = new Range(
     params[0],

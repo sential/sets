@@ -33,7 +33,7 @@ export default class Input extends React.Component<Props> {
   };
 
   public onSumButtonClick = () => {
-    this.appendToInput("⋃");
+    this.appendToInput("∪");
   };
 
   public getValue = () => {
@@ -66,7 +66,7 @@ export default class Input extends React.Component<Props> {
             fontSize: 14
           }}
         >
-          &#8899;
+          ∪
         </CharButton>
       </MathInput>
     );
