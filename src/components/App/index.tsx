@@ -133,11 +133,6 @@ export default class App extends React.Component<{}, State> {
         validFormulas: [test1, test2, test3, test4],
         checked: true
       });
-
-      console.log(test1, input1);
-      console.log(test2, input2);
-      console.log(test3, input3);
-      console.log(test4, input4);
     } else {
       this.setState({
         inputStates: ["none", "none", "none", "none"],
