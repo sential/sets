@@ -16,10 +16,9 @@ const GlobalStyle = createGlobalStyle`${Style}`;
 interface State {
   setA: string;
   setB: string;
-  input1State: "none" | "valid" | "error";
-  input2State: "none" | "valid" | "error";
-  input3State: "none" | "valid" | "error";
-  input4State: "none" | "valid" | "error";
+  inputStates: string[];
+  validFormulas: string[];
+  checked: boolean;
 }
 
 export const getRandomBetween = (min: number, max: number) => {
@@ -64,20 +63,18 @@ const getResultString = (ranges: any[]) => {
   if (ranges.length === 0) return "Ø";
 
   return ranges
-    .map(res =>
-      res
-        .toString()
-        .replace("\\rangle", ">")
-        .replace("\\langle", "<")
-        .replace(/\\infty/g, "∞")
-        .replace("u", "∪")
-    )
+    .map(res => res.toString())
     .join("∪")
     .replace(/ /g, "");
 };
 
 const getInputString = (str: string) => {
-  return getResultString(str.split("∪").map((item: any) => parseRange(item)));
+  return str
+    .replace(">", "\\rangle")
+    .replace("<", "\\langle")
+    .replace(/∞/g, "\\infty")
+    .replace("u", "∪")
+    .replace(/ /g, "");
 };
 
 export default class App extends React.Component<{}, State> {
@@ -92,13 +89,16 @@ export default class App extends React.Component<{}, State> {
   public state: State = {
     setA: "",
     setB: "",
-    input1State: "none",
-    input2State: "none",
-    input3State: "none",
-    input4State: "none"
+    inputStates: ["none", "none", "none", "none"],
+    validFormulas: ["", "", "", ""],
+    checked: false
   };
 
   public componentDidMount() {
+    this.generateRandomSets();
+  }
+
+  public generateRandomSets() {
     const setA = generateSet();
     const setB = generateSet();
 
@@ -112,26 +112,46 @@ export default class App extends React.Component<{}, State> {
   }
 
   public onCheckClick = () => {
-    const test1 = getResultString(this.rangeA.sum(this.rangeB));
-    const test2 = getResultString(this.rangeA.commonPart(this.rangeB));
-    const test3 = getResultString(this.rangeA.without(this.rangeB));
-    const test4 = getResultString(this.rangeB.without(this.rangeA));
+    if (!this.state.checked) {
+      const test1 = getResultString(this.rangeA.sum(this.rangeB));
+      const test2 = getResultString(this.rangeA.commonPart(this.rangeB));
+      const test3 = getResultString(this.rangeA.without(this.rangeB));
+      const test4 = getResultString(this.rangeB.without(this.rangeA));
 
-    const input1 = getInputString(this.inputRef1.current.getValue());
-    const input2 = getInputString(this.inputRef2.current.getValue());
-    const input3 = getInputString(this.inputRef3.current.getValue());
-    const input4 = getInputString(this.inputRef4.current.getValue());
+      const input1 = getInputString(this.inputRef1.current.getValue());
+      const input2 = getInputString(this.inputRef2.current.getValue());
+      const input3 = getInputString(this.inputRef3.current.getValue());
+      const input4 = getInputString(this.inputRef4.current.getValue());
 
-    this.setState({
-      input1State: test1 === input1 ? "valid" : "error",
-      input2State: test2 === input2 ? "valid" : "error",
-      input3State: test3 === input3 ? "valid" : "error",
-      input4State: test4 === input4 ? "valid" : "error"
-    });
-    /*console.log(test1, input1);
-    console.log(test2, input2);
-    console.log(test3, input3);
-    console.log(test4, input4);*/
+      this.setState({
+        inputStates: [
+          test1 === input1 ? "valid" : "error",
+          test2 === input2 ? "valid" : "error",
+          test3 === input3 ? "valid" : "error",
+          test4 === input4 ? "valid" : "error"
+        ],
+        validFormulas: [test1, test2, test3, test4],
+        checked: true
+      });
+
+      console.log(test1, input1);
+      console.log(test2, input2);
+      console.log(test3, input3);
+      console.log(test4, input4);
+    } else {
+      this.setState({
+        inputStates: ["none", "none", "none", "none"],
+        validFormulas: ["", "", "", ""],
+        checked: false
+      });
+
+      this.inputRef1.current.setValue("");
+      this.inputRef2.current.setValue("");
+      this.inputRef3.current.setValue("");
+      this.inputRef4.current.setValue("");
+
+      this.generateRandomSets();
+    }
   };
 
   public render() {
@@ -147,29 +167,33 @@ export default class App extends React.Component<{}, State> {
             <Input
               ref={this.inputRef1}
               formula={`A \\cup B`}
-              state={this.state.input1State}
+              state={this.state.inputStates[0]}
+              validFormula={this.state.validFormulas[0]}
             />
             <Input
               ref={this.inputRef2}
               formula={`A \\cap B`}
-              state={this.state.input2State}
+              state={this.state.inputStates[1]}
+              validFormula={this.state.validFormulas[1]}
             />
             <Input
               ref={this.inputRef3}
               formula={`A \\setminus B`}
-              state={this.state.input3State}
+              state={this.state.inputStates[2]}
+              validFormula={this.state.validFormulas[2]}
             />
             <Input
               ref={this.inputRef4}
               formula={`B \\setminus A`}
-              state={this.state.input4State}
+              state={this.state.inputStates[3]}
+              validFormula={this.state.validFormulas[3]}
             />
             <Button
               style={{ float: "right", marginTop: 16 }}
               onClick={this.onCheckClick}
               background={colors.blue["500"]}
             >
-              Check
+              {this.state.checked ? "Next" : "Check"}
             </Button>
           </Dialog>
         </StyledApp>

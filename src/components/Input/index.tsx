@@ -1,12 +1,14 @@
 import * as React from "react";
 import { MathInput, CharButton } from "./style";
 import TextField from "../TextField";
+import { colors } from "../../constants";
 
 const MathJax = require("react-mathjax").default;
 
 interface Props {
   formula: string;
-  state: "none" | "valid" | "error";
+  state: string;
+  validFormula: string;
 }
 
 export default class Input extends React.Component<Props> {
@@ -46,22 +48,40 @@ export default class Input extends React.Component<Props> {
     return inputElement.value;
   };
 
+  public setValue = (val: string) => {
+    const { inputElement } = this.inputRef.current;
+    inputElement.value = val;
+  };
+
   public render() {
-    const { formula, state } = this.props;
+    const { formula, state, validFormula } = this.props;
 
     return (
       <MathInput>
         <MathJax.Node style={{ width: 72 }} formula={`${formula} = `} inline />
         <TextField
           ref={this.inputRef}
+          isError={state === "error"}
           color={
             state === "none"
-              ? "#2196F3"
+              ? colors.blue["500"]
               : state === "valid"
-                ? "#4CAF50"
-                : "#F44336"
+                ? colors.green["500"]
+                : colors.red["500"]
           }
           style={{ marginTop: -7, flex: 1 }}
+        />
+        <MathJax.Node
+          style={{
+            width: 72,
+            position: "absolute",
+            top: 27,
+            left: 72,
+            color: colors.red["500"],
+            fontSize: 12
+          }}
+          formula={state === "error" ? validFormula : ""}
+          inline
         />
         <CharButton onClick={this.onInfButtonClick} style={{ marginTop: -7 }}>
           &#8734;

@@ -20,7 +20,7 @@ const config = {
     EnvPlugin({ NODE_ENV: production ? "production" : "development" }),
     production &&
       QuantumPlugin({
-        bakeApiIntoBundle: "app",
+        bakeApiIntoBundle: "index",
         treeshake: true,
         removeExportsInterop: false,
         uglify: {
@@ -30,7 +30,7 @@ const config = {
     WebIndexPlugin({
       template: `src/resources/page/app.html`,
       path: production ? "." : "/",
-      target: `app.html`
+      target: `index.html`
     }),
     CopyPlugin({
       files: ["*.woff2", "*.woff", "*.png", "*.svg"],
@@ -46,7 +46,7 @@ if (!production) {
   fuse.dev({ httpServer: true });
 }
 
-const app = fuse.bundle("app").instructions("> index.tsx");
+const app = fuse.bundle("index").instructions("> index.tsx");
 
 if (!production) {
   app.hmr().watch();

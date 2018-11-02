@@ -59,21 +59,20 @@ export class Range {
     } else if (range.end < this.start) {
       ranges = [this, range];
     } else {
-      const result: Range = new Range(
-        this.start,
-        this.end,
-        this.leftOpen,
-        this.rightOpen
-      );
+      const rangeStart = range.getOriginStart();
+      const rangeEnd = range.getOriginEnd();
+      const start = this.getOriginStart();
+      const end = this.getOriginEnd();
 
-      if (range.start < this.start) {
-        result.start = range.start;
-        result.leftOpen = range.leftOpen;
-      }
-      if (range.end > this.end) {
-        result.end = range.end;
-        result.rightOpen = range.rightOpen;
-      }
+      const leftOpen = rangeStart < start ? range.leftOpen : this.leftOpen;
+      const rightOpen = rangeEnd > end ? range.rightOpen : this.rightOpen;
+
+      const result: Range = new Range(
+        rangeStart < start ? rangeStart : start,
+        rangeEnd > end ? rangeEnd : end,
+        leftOpen,
+        rightOpen
+      );
 
       ranges = [result];
     }
@@ -83,8 +82,11 @@ export class Range {
 
   public without(range: Range) {
     let ranges: Range[] = [];
+    const commonPart = this.commonPart(range);
 
-    if (range.start <= this.start && range.end >= this.end) {
+    if (!commonPart[0]) {
+      ranges = [this];
+    } else if (commonPart[0].toString() === this.toString()) {
       ranges = [];
     } else if (range.start <= this.start && range.end < this.end) {
       const result = new Range(

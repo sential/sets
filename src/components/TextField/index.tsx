@@ -16,6 +16,7 @@ export interface IProps {
   color?: string;
   style?: any;
   onKeyPress?: KeyboardEvent;
+  isError?: boolean;
 }
 
 export interface IState {
@@ -41,7 +42,7 @@ export default class Textfield extends React.Component<IProps, IState> {
   };
 
   public render() {
-    const { color, style, onKeyPress } = this.props;
+    const { color, style, onKeyPress, isError } = this.props;
     const { activated } = this.state;
 
     return (
@@ -57,7 +58,7 @@ export default class Textfield extends React.Component<IProps, IState> {
             />
           </InputContainer>
           <HoverBorder className="hover-border" />
-          <Indicator color={color} activated={activated} />
+          <Indicator color={color} activated={activated || isError} />
         </Container>
       </Root>
     );
@@ -76,7 +77,11 @@ export default class Textfield extends React.Component<IProps, IState> {
   private onBlur = () => {
     const { activated } = this.state;
 
-    if (this.inputElement.value.length === 0 && activated) {
+    if (
+      this.inputElement.value.length === 0 &&
+      activated &&
+      !this.props.isError
+    ) {
       this.setState({
         activated: false
       });

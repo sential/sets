@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const MathInput = styled.div`
   display: flex;
   position: relative;
-  margin-top: 24px;
+  margin-top: 32px;
 `;
 
 export const CharButton = styled.div`
