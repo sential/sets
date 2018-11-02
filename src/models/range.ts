@@ -21,22 +21,21 @@ export class Range {
   public commonPart(range: Range) {
     let ranges: Range[] = [];
 
-    if (range.start < this.end) {
-      const result: Range = new Range(
-        this.start,
-        this.end,
-        this.leftOpen,
-        this.rightOpen
-      );
+    if (range.start < this.end && range.end > this.start) {
+      const rangeStart = range.getOriginStart();
+      const rangeEnd = range.getOriginEnd();
+      const start = this.getOriginStart();
+      const end = this.getOriginEnd();
 
-      if (range.start > this.start) {
-        result.start = range.start;
-        result.leftOpen = range.leftOpen;
-      }
-      if (range.end < this.end) {
-        result.end = range.end;
-        result.rightOpen = range.rightOpen;
-      }
+      const leftOpen = rangeStart > start ? range.leftOpen : this.leftOpen;
+      const rightOpen = rangeEnd < end ? range.rightOpen : this.rightOpen;
+
+      const result: Range = new Range(
+        rangeStart > start ? rangeStart : start,
+        rangeEnd < end ? rangeEnd : end,
+        leftOpen,
+        rightOpen
+      );
 
       ranges = [result];
     }
@@ -125,10 +124,13 @@ export class Range {
   }
 
   public toString = () => {
-    return `${
-      this.leftOpen ? "<" : "("
-    }${this.getOriginStart()}, ${this.getOriginEnd()}${
-      this.rightOpen ? ">" : ")"
+    const start = this.getOriginStart();
+    const end = this.getOriginEnd();
+
+    return `${this.leftOpen ? "\\langle" : "("}${
+      start === Number.NEGATIVE_INFINITY ? "-\\infty" : start
+    }, ${end === Number.POSITIVE_INFINITY ? "\\infty" : end}${
+      this.rightOpen ? "\\rangle" : ")"
     }`;
   };
 }

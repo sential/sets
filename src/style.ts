@@ -22,7 +22,7 @@ export const Style = css`
     margin: 0;
     font-size: 14px;
     font-family: Roboto;
-    background-color: white;
+    background-color: #212121;
     padding: 0;
     width: 100vw;
     height: 100vh;
